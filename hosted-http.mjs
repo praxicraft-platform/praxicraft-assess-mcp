@@ -22,7 +22,7 @@ const API_BASE_URL = process.env.PRAXICRAFT_API_BASE_URL || "https://assess.prax
 const RESOURCE_SERVER_URL = process.env.MCP_RESOURCE_SERVER_URL || "https://assess.praxicraft.com/mcp";
 const OAUTH_ISSUER_URL = process.env.MCP_OAUTH_ISSUER || "https://assess.praxicraft.com/api/v1/mcp/oauth";
 const SERVICE_DOC_URL = process.env.MCP_SERVICE_DOCUMENTATION_URL || "https://docs.praxicraft.com/assess-mcp";
-const PACKAGE_VERSION = "0.2.4";
+const PACKAGE_VERSION = "0.2.5";
 
 function oauthIssuerEndpoint(issuer, path) {
   const base = String(issuer).replace(/\/+$/, "");

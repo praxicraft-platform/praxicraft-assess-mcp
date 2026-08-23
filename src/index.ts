@@ -12,7 +12,7 @@ if (!apiKey) {
 }
 
 const client = new AssessClient(apiKey);
-const server = new McpServer({ name: "assess-mcp", version: "0.2.2" });
+const server = new McpServer({ name: "assess-mcp", version: "0.2.5" });
 registerAssessTools(server, client);
 
 const transport = new StdioServerTransport();
