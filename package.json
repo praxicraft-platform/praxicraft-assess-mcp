@@ -1,0 +1,55 @@
+{
+  "name": "@praxicraft/assess-mcp",
+  "version": "0.2.4",
+  "description": "MCP server for the Praxicraft Assess Public API",
+  "type": "module",
+  "license": "MIT",
+  "author": "Praxicraft",
+  "keywords": [
+    "mcp",
+    "assess",
+    "praxicraft",
+    "hiring",
+    "ats"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/praxicraft-platform/praxicraft-assess-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/praxicraft-platform/praxicraft-assess-mcp/issues"
+  },
+  "homepage": "https://docs.praxicraft.com/assess-mcp",
+  "files": [
+    "dist",
+    "README.md",
+    "hosted-http.mjs"
+  ],
+  "bin": {
+    "assess-mcp": "./dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:http": "npm run build && node hosted-http.mjs",
+    "dev": "tsc && node dist/index.js",
+    "test": "npm run build && node --test dist/api-paths.test.js dist/hosted-http-auth.test.js dist/oauth-urls.test.js",
+    "smoke": "npm run build && node smoke-test.mjs",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "express": "^5.2.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

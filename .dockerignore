@@ -1,0 +1,8 @@
+node_modules
+dist
+*.md
+.git
+.env*
+smoke-test.mjs
+**/*.test.ts
+**/*.test.js
