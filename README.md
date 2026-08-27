@@ -139,7 +139,7 @@ Tools map to the Assess Public API (`/api/v1/public/…`). Coverage includes:
 
 | Area | Examples |
 |------|----------|
-| Assessments | List, create, update, activate, attach cases |
+| Assessments | List, create, update, activate, attach tasks |
 | Invitations | Invite, bulk invite, remind, cancel |
 | Results | List / retrieve by `invite_token` |
 | Webhooks | Create destinations, test, list deliveries, retry |
