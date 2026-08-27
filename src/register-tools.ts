@@ -73,7 +73,7 @@ export function registerAssessTools(server: any, client: AssessClient): void {
 
   server.tool(
     "create_assessment",
-    "Create a draft assessment (attach cases, then PATCH status to active)",
+    "Create a draft assessment (attach tasks, then PATCH status to active)",
     {
       title: z.string(),
       description: z.string().optional(),
@@ -167,7 +167,7 @@ export function registerAssessTools(server: any, client: AssessClient): void {
   );
 
   server.tool(
-    "list_assessment_cases",
+    "list_assessment_tasks",
     "List tasks attached to an assessment (cursor-paginated)",
     {
       slug: z.string(),
@@ -177,7 +177,7 @@ export function registerAssessTools(server: any, client: AssessClient): void {
       runTool(client, () =>
         client.getWithBearer(
           appendQuery(
-            publicPath("assessments", String(slug), "cases"),
+            publicPath("assessments", String(slug), "tasks"),
             queryParams({ cursor, page_size }),
           ),
           getBearerToken(extra),
@@ -185,8 +185,8 @@ export function registerAssessTools(server: any, client: AssessClient): void {
       ),
   );
 
-  const assessmentCaseItem = z.object({
-    case_id: z.string().uuid(),
+  const assessmentTaskItem = z.object({
+    task_id: z.string().uuid(),
     source: z.enum(["platform", "org"]).optional(),
     order: z.number().int().optional(),
     weight: z.number().int().optional(),
@@ -194,53 +194,53 @@ export function registerAssessTools(server: any, client: AssessClient): void {
   });
 
   server.tool(
-    "attach_assessment_cases",
-    "Attach one or more cases to an assessment (cases array, or case_id + source)",
+    "attach_assessment_tasks",
+    "Attach one or more tasks to an assessment (tasks array, or task_id + source)",
     {
       slug: z.string(),
-      cases: z.array(assessmentCaseItem).optional(),
-      case_id: z.string().uuid().optional(),
+      tasks: z.array(assessmentTaskItem).optional(),
+      task_id: z.string().uuid().optional(),
       source: z.enum(["platform", "org"]).optional(),
     },
-    async ({ slug, cases, case_id, source }, extra) =>
+    async ({ slug, tasks, task_id, source }, extra) =>
       runTool(client, () =>
         client.postWithBearer(
-          publicPath("assessments", String(slug), "cases", "attach"),
-          cases !== undefined ? { cases } : { case_id, source },
+          publicPath("assessments", String(slug), "tasks", "attach"),
+          tasks !== undefined ? { tasks } : { task_id, source },
           getBearerToken(extra),
         ),
       ),
   );
 
   server.tool(
-    "replace_assessment_cases",
-    "Replace the full case lineup on an assessment",
+    "replace_assessment_tasks",
+    "Replace the full task lineup on an assessment",
     {
       slug: z.string(),
-      cases: z.array(assessmentCaseItem),
+      tasks: z.array(assessmentTaskItem),
     },
-    async ({ slug, cases }, extra) =>
+    async ({ slug, tasks }, extra) =>
       runTool(client, () =>
         client.putWithBearer(
-          publicPath("assessments", String(slug), "cases", "replace"),
-          { cases },
+          publicPath("assessments", String(slug), "tasks", "replace"),
+          { tasks },
           getBearerToken(extra),
         ),
       ),
   );
 
   server.tool(
-    "remove_assessment_case",
-    "Remove a single attached case from an assessment",
+    "remove_assessment_task",
+    "Remove a single attached task from an assessment",
     {
       slug: z.string(),
-      assessment_case_id: z.string().uuid(),
+      assessment_task_id: z.string().uuid(),
     },
-    async ({ slug, assessment_case_id }, extra) =>
+    async ({ slug, assessment_task_id }, extra) =>
       runTool(client, () =>
         client.deleteWithBearer(
-          publicPath("assessments", String(slug), "cases", "remove"),
-          { assessment_case_id },
+          publicPath("assessments", String(slug), "tasks", "remove"),
+          { assessment_task_id },
           getBearerToken(extra),
         ),
       ),
@@ -466,8 +466,8 @@ export function registerAssessTools(server: any, client: AssessClient): void {
   );
 
   server.tool(
-    "list_platform_cases",
-    "Browse curated platform cases (safe metadata; cursor-paginated)",
+    "list_platform_tasks",
+    "Browse curated platform tasks (safe metadata; cursor-paginated)",
     {
       search: z.string().optional(),
       track: z.string().optional(),
@@ -479,7 +479,7 @@ export function registerAssessTools(server: any, client: AssessClient): void {
       runTool(client, () =>
         client.getWithBearer(
           listPath(
-            "platform-cases",
+            "platform-tasks",
             queryParams({ search, track, difficulty, type, cursor, page_size }),
           ),
           getBearerToken(extra),
@@ -488,25 +488,25 @@ export function registerAssessTools(server: any, client: AssessClient): void {
   );
 
   server.tool(
-    "list_cases",
-    "List custom org cases (cursor-paginated)",
+    "list_tasks",
+    "List custom org tasks (cursor-paginated)",
     { ...paginationArgs },
     async ({ cursor, page_size }, extra) =>
       runTool(client, () =>
         client.getWithBearer(
-          listPath("cases", queryParams({ cursor, page_size })),
+          listPath("tasks", queryParams({ cursor, page_size })),
           getBearerToken(extra),
         ),
       ),
   );
 
   server.tool(
-    "create_case",
-    "Create a custom org case",
+    "create_task",
+    "Create a custom org task",
     {
       title: z.string(),
       description: z.string(),
-      case_type: z.string(),
+      task_type: z.string(),
       difficulty: z.string().optional(),
       points: z.number().int().optional(),
       question: z.string(),
@@ -521,28 +521,28 @@ export function registerAssessTools(server: any, client: AssessClient): void {
     },
     async (body, extra) =>
       runTool(client, () =>
-        client.postWithBearer(publicPath("cases", "create"), body, getBearerToken(extra)),
+        client.postWithBearer(publicPath("tasks", "create"), body, getBearerToken(extra)),
       ),
   );
 
   server.tool(
-    "get_case",
-    "Get a custom org case by id",
+    "get_task",
+    "Get a custom org task by id",
     { id: z.string().uuid() },
     async ({ id }, extra) =>
       runTool(client, () =>
-        client.getWithBearer(publicPath("cases", String(id)), getBearerToken(extra)),
+        client.getWithBearer(publicPath("tasks", String(id)), getBearerToken(extra)),
       ),
   );
 
   server.tool(
-    "update_case",
-    "Update a custom org case",
+    "update_task",
+    "Update a custom org task",
     {
       id: z.string().uuid(),
       title: z.string().optional(),
       description: z.string().optional(),
-      case_type: z.string().optional(),
+      task_type: z.string().optional(),
       difficulty: z.string().optional(),
       points: z.number().int().optional(),
       question: z.string().optional(),
@@ -557,17 +557,17 @@ export function registerAssessTools(server: any, client: AssessClient): void {
     },
     async ({ id, ...body }, extra) =>
       runTool(client, () =>
-        client.patchWithBearer(publicPath("cases", String(id)), body, getBearerToken(extra)),
+        client.patchWithBearer(publicPath("tasks", String(id)), body, getBearerToken(extra)),
       ),
   );
 
   server.tool(
-    "delete_case",
-    "Soft-delete a custom org case",
+    "delete_task",
+    "Soft-delete a custom org task",
     { id: z.string().uuid() },
     async ({ id }, extra) =>
       runTool(client, () =>
-        client.deleteWithBearer(publicPath("cases", String(id)), undefined, getBearerToken(extra)),
+        client.deleteWithBearer(publicPath("tasks", String(id)), undefined, getBearerToken(extra)),
       ),
   );
 
@@ -865,13 +865,13 @@ export function registerAssessTools(server: any, client: AssessClient): void {
   );
 
   server.tool(
-    "list_interview_org_cases",
-    "List org coding cases available for interviews",
+    "list_interview_org_tasks",
+    "List org coding tasks available for interviews",
     { q: z.string().optional() },
     async ({ q }, extra) =>
       runTool(client, () =>
         client.getWithBearer(
-          listPath("interviews/org-cases", queryParams({ q })),
+          listPath("interviews/org-tasks", queryParams({ q })),
           getBearerToken(extra),
         ),
       ),
