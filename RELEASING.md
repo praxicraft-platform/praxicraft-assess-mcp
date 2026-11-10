@@ -7,8 +7,8 @@
 3. `Publish` workflow tags `v{version}` and runs `npm publish` when the tag is new.
 4. Set **Settings → Secrets → Actions → `NPM_TOKEN`** (npm Automation token or granular with 2FA bypass for `@praxicraft/*`).
 
-Do **not** publish from `Gamified-Application` — that workflow’s publish job is disabled.
+Publish the package from this repository only.
 
-## Container / K8s
+## Container release
 
-Follow [DEPLOYMENT.md](./DEPLOYMENT.md): sync into monorepo `packages/assess-mcp`, then use the Assess deploy pipeline (staging k3s + Harbor + Kubernetes-infra).
+Build the Dockerfile from the same tagged source as the package. Follow [DEPLOYMENT.md](DEPLOYMENT.md) for public self-hosting guidance; hosted-service operations are documented privately.
